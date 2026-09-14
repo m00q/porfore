@@ -288,12 +288,15 @@ class _SkillsSectionState extends State<SkillsSection> {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Color.lerp(
-            Colors.white70,
+            Colors.transparent,
             const Color(0xffd4e2de),
             toCategories,
           ),
           borderRadius: BorderRadius.circular(lerpDouble(16, 4, toCategories)!),
-          border: Border.all(color: Colors.blueGrey.withValues(alpha: .35)),
+          // Preserve category decoration; Chaos/Graph remain transparent.
+          border: Border.all(
+            color: Colors.blueGrey.withValues(alpha: .35 * toCategories),
+          ),
         ),
         child: Center(
           child: FittedBox(

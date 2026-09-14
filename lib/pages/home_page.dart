@@ -164,64 +164,26 @@ class _HomePageState extends State<HomePage> {
                   left: 12,
                   right: 12,
                   child: Center(
-                    child: Material(
-                      color: Colors.white,
-                      elevation: 3,
-                      borderRadius: BorderRadius.circular(16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: SizedBox(
-                          width: math.min(440, constraints.maxWidth - 36),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (var i = 0; i < sections.length; i++)
-                                Expanded(
-                                  child: TextButton(
-                                    style: ButtonStyle(
-                                      minimumSize: const WidgetStatePropertyAll(
-                                        Size(0, 44),
-                                      ),
-                                      padding: const WidgetStatePropertyAll(
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                      ),
-                                      foregroundColor: WidgetStatePropertyAll(
-                                        i == active
-                                            ? Colors.white
-                                            : Colors.black87,
-                                      ),
-                                      backgroundColor:
-                                          WidgetStateProperty.resolveWith((
-                                            states,
-                                          ) {
-                                            if (states.contains(
-                                              WidgetState.hovered,
-                                            )) {
-                                              return i == active
-                                                  ? Colors.blueGrey
-                                                  : Colors.black12;
-                                            }
-                                            return i == active
-                                                ? Colors.black87
-                                                : Colors.transparent;
-                                          }),
-                                    ),
-                                    onPressed: () => _scroll.animateTo(
-                                      scene.starts[i].clamp(
-                                        0.0,
-                                        _scroll.position.maxScrollExtent,
-                                      ),
-                                      duration: const Duration(
-                                        milliseconds: 650,
-                                      ),
-                                      curve: Curves.easeInOut,
-                                    ),
-                                    child: FittedBox(child: Text(sections[i])),
+                    child: SizedBox(
+                      width: math.min(440, constraints.maxWidth - 36),
+                      child: Row(
+                        children: [
+                          for (var i = 0; i < sections.length; i++)
+                            Expanded(
+                              child: _NavigationItem(
+                                label: sections[i],
+                                active: i == active,
+                                onPressed: () => _scroll.animateTo(
+                                  scene.starts[i].clamp(
+                                    0.0,
+                                    _scroll.position.maxScrollExtent,
                                   ),
+                                  duration: const Duration(milliseconds: 650),
+                                  curve: Curves.easeInOut,
                                 ),
-                            ],
-                          ),
-                        ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
@@ -233,4 +195,64 @@ class _HomePageState extends State<HomePage> {
       },
     ),
   );
+}
+
+class _NavigationItem extends StatefulWidget {
+  const _NavigationItem({
+    required this.label,
+    required this.active,
+    required this.onPressed,
+  });
+  final String label;
+  final bool active;
+  final VoidCallback onPressed;
+  @override
+  State<_NavigationItem> createState() => _NavigationItemState();
+}
+
+class _NavigationItemState extends State<_NavigationItem> {
+  bool _hovered = false;
+  bool _focused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final emphasized = widget.active || _hovered || _focused;
+    return TextButton(
+      onHover: (value) => setState(() => _hovered = value),
+      onFocusChange: (value) => setState(() => _focused = value),
+      onPressed: widget.onPressed,
+      style: TextButton.styleFrom(
+        minimumSize: const Size(0, 44),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        backgroundColor: Colors.transparent,
+        overlayColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        side: BorderSide.none,
+      ),
+      child: AnimatedSlide(
+        offset: Offset(
+          0,
+          _hovered || _focused
+              ? -.18
+              : widget.active
+              ? 0
+              : .18,
+        ),
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: emphasized
+                ? const Color(0xff171717)
+                : const Color(0xff777777),
+          ),
+          child: FittedBox(child: Text(widget.label)),
+        ),
+      ),
+    );
+  }
 }
