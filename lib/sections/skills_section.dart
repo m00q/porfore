@@ -304,7 +304,7 @@ class _SkillsSectionState extends State<SkillsSection> {
             child: Text(
               skill.name,
               maxLines: 1,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 14),
             ),
           ),
         ),

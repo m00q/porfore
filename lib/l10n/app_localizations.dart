@@ -100,6 +100,12 @@ abstract class AppLocalizations {
     Locale('ko'),
   ];
 
+  /// No description provided for @heroQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'People who analyze algorithms have double happiness.'**
+  String get heroQuote;
+
   /// No description provided for @portfolioTitle.
   ///
   /// In en, this message translates to:
@@ -303,6 +309,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **''**
   String get career2025Description;
+
+  /// No description provided for @career2025WorkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Semiconductor Manufacturing Equipment Operation & Management'**
+  String get career2025WorkTitle;
+
+  /// No description provided for @career2025WorkDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Operated semiconductor manufacturing equipment, monitored equipment status, and reported abnormalities in accordance with on-site procedures, with a focus on maintaining stable equipment operation.'**
+  String get career2025WorkDescription;
+
+  /// No description provided for @career2026WorkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Building Services & CAD Training'**
+  String get career2026WorkTitle;
+
+  /// No description provided for @career2026WorkDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying the fundamentals of building services and learning CAD drawing operations using Rebro. Training also covers construction terminology, business Japanese, and basic knowledge required for on-site work.'**
+  String get career2026WorkDescription;
 }
 
 class _AppLocalizationsDelegate

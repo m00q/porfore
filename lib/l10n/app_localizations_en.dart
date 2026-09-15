@@ -10,6 +10,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get heroQuote =>
+      'People who analyze algorithms have double happiness.';
+
+  @override
   String get portfolioTitle => 'JUN\'s Portfolio';
 
   @override
@@ -116,4 +120,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get career2025Description => '';
+
+  @override
+  String get career2025WorkTitle =>
+      'Semiconductor Manufacturing Equipment Operation & Management';
+
+  @override
+  String get career2025WorkDescription =>
+      'Operated semiconductor manufacturing equipment, monitored equipment status, and reported abnormalities in accordance with on-site procedures, with a focus on maintaining stable equipment operation.';
+
+  @override
+  String get career2026WorkTitle => 'Building Services & CAD Training';
+
+  @override
+  String get career2026WorkDescription =>
+      'Studying the fundamentals of building services and learning CAD drawing operations using Rebro. Training also covers construction terminology, business Japanese, and basic knowledge required for on-site work.';
 }

@@ -10,6 +10,9 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get heroQuote => 'アルゴリズムを分析する人には、二倍の幸福がある。';
+
+  @override
   String get portfolioTitle => 'JUNのポートフォリオ';
 
   @override
@@ -114,4 +117,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get career2025Description => '';
+
+  @override
+  String get career2025WorkTitle => '半導体製造設備の運用・管理';
+
+  @override
+  String get career2025WorkDescription =>
+      '半導体製造現場にて、製造設備の操作、稼働状況の確認、異常時の報告などを担当。設備の安定稼働を意識しながら、現場ルールに基づいた業務を行いました。';
+
+  @override
+  String get career2026WorkTitle => '建築設備・CAD研修';
+
+  @override
+  String get career2026WorkDescription =>
+      '建築・設備に関する基礎知識を学びながら、CADソフト「Rebro」を使用した図面操作を習得。あわせて、建築用語やビジネス日本語、現場業務に必要な基礎知識について研修を受けています。';
 }

@@ -10,6 +10,9 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get heroQuote => '알고리즘을 분석하는 사람에게는 두 배의 행복이 있다.';
+
+  @override
   String get portfolioTitle => 'JUN의 포트폴리오';
 
   @override
@@ -114,4 +117,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get career2025Description => '';
+
+  @override
+  String get career2025WorkTitle => '반도체 제조설비 운용 및 관리';
+
+  @override
+  String get career2025WorkDescription =>
+      '반도체 제조 현장에서 제조설비 조작, 가동 상태 확인, 이상 발생 시 보고 등의 업무를 담당했습니다. 설비의 안정적인 가동을 고려하며 현장 규정에 따라 업무를 수행했습니다.';
+
+  @override
+  String get career2026WorkTitle => '건축설비 및 CAD 연수';
+
+  @override
+  String get career2026WorkDescription =>
+      '건축·설비 관련 기초지식을 학습하고 CAD 소프트웨어 Rebro를 이용한 도면 조작을 익혔습니다. 또한 건축용어, 비즈니스 일본어 및 현장 업무에 필요한 기초지식에 대한 연수를 받고 있습니다.';
 }

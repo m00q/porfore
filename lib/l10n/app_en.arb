@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "heroQuote": "People who analyze algorithms have double happiness.",
   "portfolioTitle": "JUN's Portfolio",
   "home": "HOME",
   "bio": "BIO",
@@ -34,5 +35,9 @@
   "career2019TrainingTitle": "Korea Human Resources Development Institute",
   "career2019TrainingDescription": "JAVA-based Digital Convergence Developer Training\nStudied Java, SQL, Spring, and related technologies",
   "career2025Title": "Joined HCM Co., Ltd.",
-  "career2025Description": ""
+  "career2025Description": "",
+  "career2025WorkTitle": "Semiconductor Manufacturing Equipment Operation & Management",
+  "career2025WorkDescription": "Operated semiconductor manufacturing equipment, monitored equipment status, and reported abnormalities in accordance with on-site procedures, with a focus on maintaining stable equipment operation.",
+  "career2026WorkTitle": "Building Services & CAD Training",
+  "career2026WorkDescription": "Studying the fundamentals of building services and learning CAD drawing operations using Rebro. Training also covers construction terminology, business Japanese, and basic knowledge required for on-site work."
 }

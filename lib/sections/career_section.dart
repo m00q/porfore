@@ -9,7 +9,8 @@ import '../widgets/scroll_reveal.dart';
 class CareerLayout {
   CareerLayout._(this.entries, this.headingHeight, this.rowHeights);
 
-  final List<(String, String, String)> entries;
+  final List<(String, String, String, String, String)> entries;
+  static const workTitleStyle = TextStyle(fontWeight: FontWeight.w600);
   final double headingHeight;
   final List<double> rowHeights;
   double get contentHeight =>
@@ -23,15 +24,29 @@ class CareerLayout {
   factory CareerLayout.measure(BuildContext context, double width) {
     final l10n = AppLocalizations.of(context)!;
     final entries = [
-      ('2019', l10n.career2019Title, l10n.career2019Description),
+      ('2019', l10n.career2019Title, l10n.career2019Description, '', ''),
       (
         '2019',
         l10n.career2019TrainingTitle,
         l10n.career2019TrainingDescription,
+        '',
+        '',
       ),
-      ('2023', l10n.career2023Title, l10n.career2023Description),
-      ('2025', l10n.career2025Title, l10n.career2025Description),
-      ('2026', l10n.career2026Title, l10n.career2026Description),
+      ('2023', l10n.career2023Title, l10n.career2023Description, '', ''),
+      (
+        '2025',
+        l10n.career2025Title,
+        l10n.career2025Description,
+        l10n.career2025WorkTitle,
+        l10n.career2025WorkDescription,
+      ),
+      (
+        '2026',
+        l10n.career2026Title,
+        l10n.career2026Description,
+        l10n.career2026WorkTitle,
+        l10n.career2026WorkDescription,
+      ),
     ];
     final contentWidth = math.max(1.0, math.min(width, 680.0) - 64);
     final defaultStyle = DefaultTextStyle.of(context).style;
@@ -61,8 +76,14 @@ class CareerLayout {
             textHeight(entry.$1, textWidth) +
                 10 +
                 textHeight(entry.$2, textWidth, const TextStyle(fontSize: 22)) +
-                8 +
-                textHeight(entry.$3, textWidth),
+                (entry.$3.isEmpty ? 0 : 8 + textHeight(entry.$3, textWidth)) +
+                (entry.$4.isEmpty
+                    ? 0
+                    : 12 +
+                          textHeight(entry.$4, textWidth, workTitleStyle) +
+                          8 +
+                          textHeight(entry.$5, textWidth) +
+                          32),
           ),
       ],
     );
@@ -151,8 +172,19 @@ class CareerSection extends StatelessWidget {
                                   entries[i].$2,
                                   style: const TextStyle(fontSize: 22),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(entries[i].$3),
+                                if (entries[i].$3.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  Text(entries[i].$3),
+                                ],
+                                if (entries[i].$4.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    entries[i].$4,
+                                    style: CareerLayout.workTitleStyle,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(entries[i].$5),
+                                ],
                               ],
                             ),
                           ),
