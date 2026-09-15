@@ -8,6 +8,107 @@ import 'package:porfore/sections/career_section.dart';
 import 'package:porfore/pages/home_page.dart';
 
 void main() {
+  testWidgets('Skills holds anchors without changing scroll offsets', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1200, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(const MainApp());
+    await tester.pumpAndSettle();
+    final career = tester.widget<CareerSection>(find.byType(CareerSection));
+    final scroll = tester
+        .widget<SingleChildScrollView>(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is SingleChildScrollView &&
+                widget.scrollDirection == Axis.vertical,
+          ),
+        )
+        .controller!;
+    Future<double> progressAt(double raw) async {
+      final offset = 800 + career.height + raw * 1600;
+      scroll.jumpTo(offset);
+      await tester.pump();
+      expect(scroll.offset, closeTo(offset, 1e-8));
+      return tester.widget<SkillsSection>(find.byType(SkillsSection)).progress;
+    }
+
+    for (final raw in [0.0, .06, .12]) {
+      expect(await progressAt(raw), 0);
+    }
+    for (final raw in [.40, .43, .5, .57, .60, .55, .41]) {
+      expect(await progressAt(raw), .5);
+    }
+    expect(await progressAt(.39), lessThan(.5));
+    expect(await progressAt(.61), greaterThan(.5));
+    for (final raw in [.88, .94, 1.0, .90]) {
+      expect(await progressAt(raw), 1);
+    }
+    // Large jumps skip holds immediately, and reverse scrolling is symmetric.
+    expect(await progressAt(0), 0);
+    expect(await progressAt(1), 1);
+    var previous = 1.0;
+    for (var step = 100; step >= 0; step--) {
+      final progress = await progressAt(step / 100);
+      expect(progress, lessThanOrEqualTo(previous));
+      expect((progress - previous).abs(), lessThan(.03));
+      previous = progress;
+    }
+    final decorations = find.byWidgetPredicate(
+      (widget) =>
+          widget is Image &&
+          widget.image is AssetImage &&
+          (widget.image as AssetImage).assetName ==
+              'assets/images/edgelayer.png',
+    );
+    expect(decorations, findsNWidgets(4));
+    for (var i = 0; i < 4; i++) {
+      expect(
+        find.ancestor(
+          of: decorations.at(i),
+          matching: find.byType(IgnorePointer),
+        ),
+        findsWidgets,
+      );
+      final rotation = tester.widget<RotatedBox>(
+        find.ancestor(of: decorations.at(i), matching: find.byType(RotatedBox)),
+      );
+      expect(rotation.quarterTurns, i);
+      expect(
+        tester.getSize(decorations.at(i)),
+        tester.getSize(decorations.first),
+      );
+    }
+    scroll.jumpTo(0);
+    await tester.pump();
+    final bottomCorner = find.ancestor(
+      of: decorations.at(2),
+      matching: find.byType(RotatedBox),
+    );
+    final initialTop = tester.getTopLeft(decorations.first);
+    final initialBottom = tester.getBottomRight(bottomCorner);
+    expect(initialTop.dy, greaterThanOrEqualTo(0));
+    expect(initialBottom.dy, greaterThan(800));
+    scroll.jumpTo(300);
+    await tester.pump();
+    expect(
+      tester.getTopLeft(decorations.first).dy,
+      closeTo(initialTop.dy - 300, 1e-8),
+    );
+    expect(
+      tester.getBottomRight(bottomCorner).dy,
+      closeTo(initialBottom.dy - 300, 1e-8),
+    );
+    scroll.jumpTo(scroll.position.maxScrollExtent);
+    await tester.pump();
+    expect(tester.getTopLeft(decorations.first).dy, lessThan(0));
+    expect(
+      tester.getBottomRight(bottomCorner).dy,
+      closeTo(800 - initialTop.dy, 1e-8),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Career fits all locales and scene uses its measured height', (
     tester,
   ) async {

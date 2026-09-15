@@ -138,7 +138,7 @@ class _SkillsSectionState extends State<SkillsSection> {
     final toCategories = _phase(widget.progress, .55, .90);
     final graphOpacity = toGraph * (1 - toCategories);
     return ColoredBox(
-      color: const Color(0xffe9eceb),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 80, 24, 90),
         child: LayoutBuilder(

@@ -16,6 +16,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
     locale: _locale,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,

@@ -22,9 +22,24 @@ class _ScrollScene {
   double get skillsStart => height + bioHeight;
   double get travel => height * 2;
   double get creditsStart => skillsStart + stageHeight + travel;
+  double get documentHeight => creditsStart + height;
   List<double> get starts => [0, height, skillsStart, creditsStart];
-  double progress(double offset) =>
-      ((offset - skillsStart) / travel).clamp(0.0, 1.0);
+  double progress(double offset) {
+    final raw = ((offset - skillsStart) / travel).clamp(0.0, 1.0);
+    // Dead zones hold complete poses without moving the browser scroll offset.
+    // Smoothstep has zero slope at each boundary, easing into and out of holds.
+    double transition(double start, double end) {
+      final t = ((raw - start) / (end - start)).clamp(0.0, 1.0);
+      return t * t * (3 - 2 * t);
+    }
+
+    if (raw <= .12) return 0;
+    if (raw < .40) return .5 * transition(.12, .40);
+    if (raw <= .60) return .5;
+    if (raw < .88) return .5 + .5 * transition(.60, .88);
+    return 1;
+  }
+
   double pinOffset(double offset) => (offset - skillsStart).clamp(0.0, travel);
   int active(double offset) =>
       starts.lastIndexWhere((start) => offset + height * .35 >= start);
@@ -39,6 +54,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scroll = ScrollController();
+  final _documentLayer = LayerLink();
 
   @override
   void dispose() {
@@ -65,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   );
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xfff4f3ef),
+    backgroundColor: Colors.white,
     body: LayoutBuilder(
       builder: (context, constraints) {
         final careerLayout = CareerLayout.measure(
@@ -87,49 +103,52 @@ class _HomePageState extends State<HomePage> {
               children: [
                 SingleChildScrollView(
                   controller: _scroll,
-                  child: Column(
-                    children: [
-                      ScrollReveal(
-                        top: 0,
-                        height: scene.height,
-                        offset: offset,
-                        viewportHeight: scene.height,
-                        child: IntroSection(height: scene.height),
-                      ),
-                      CareerSection(
-                        layout: careerLayout,
-                        height: scene.bioHeight,
-                        top: scene.height,
-                        offset: offset,
-                        viewportHeight: scene.height,
-                      ),
-                      SizedBox(
-                        height: scene.stageHeight + scene.travel,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: scene.pinOffset(offset),
-                              left: 0,
-                              right: 0,
-                              height: scene.stageHeight,
-                              child: SkillsSection(
-                                progress: scene.progress(offset),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ScrollReveal(
-                        top: scene.creditsStart,
-                        height: scene.height,
-                        offset: offset,
-                        viewportHeight: scene.height,
-                        child: CreditsSection(
+                  child: CompositedTransformTarget(
+                    link: _documentLayer,
+                    child: Column(
+                      children: [
+                        ScrollReveal(
+                          top: 0,
                           height: scene.height,
-                          onPokemon: _openPokemon,
+                          offset: offset,
+                          viewportHeight: scene.height,
+                          child: IntroSection(height: scene.height),
                         ),
-                      ),
-                    ],
+                        CareerSection(
+                          layout: careerLayout,
+                          height: scene.bioHeight,
+                          top: scene.height,
+                          offset: offset,
+                          viewportHeight: scene.height,
+                        ),
+                        SizedBox(
+                          height: scene.stageHeight + scene.travel,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: scene.pinOffset(offset),
+                                left: 0,
+                                right: 0,
+                                height: scene.stageHeight,
+                                child: SkillsSection(
+                                  progress: scene.progress(offset),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ScrollReveal(
+                          top: scene.creditsStart,
+                          height: scene.height,
+                          offset: offset,
+                          viewportHeight: scene.height,
+                          child: CreditsSection(
+                            height: scene.height,
+                            onPokemon: _openPokemon,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Positioned(
@@ -188,6 +207,23 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                // Paint above navigation, but anchor to the scrolling document.
+                // The linked transform follows its actual scroll translation.
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  width: constraints.maxWidth,
+                  height: scene.documentHeight,
+                  child: IgnorePointer(
+                    child: ExcludeSemantics(
+                      child: CompositedTransformFollower(
+                        link: _documentLayer,
+                        showWhenUnlinked: false,
+                        child: _CornerDecoration(size: constraints.biggest),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             );
           },
@@ -195,6 +231,39 @@ class _HomePageState extends State<HomePage> {
       },
     ),
   );
+}
+
+class _CornerDecoration extends StatelessWidget {
+  const _CornerDecoration({required this.size});
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    final horizontalInset = (size.width * .02).clamp(8.0, 32.0);
+    final verticalInset = (size.height * .02).clamp(8.0, 24.0);
+    final extent = (size.shortestSide * .18).clamp(56.0, 144.0);
+    return Stack(
+      children: [
+        for (var corner = 0; corner < 4; corner++)
+          Positioned(
+            left: corner == 0 || corner == 3 ? horizontalInset : null,
+            right: corner == 1 || corner == 2 ? horizontalInset : null,
+            top: corner < 2 ? verticalInset : null,
+            bottom: corner >= 2 ? verticalInset : null,
+            width: extent,
+            height: extent,
+            child: RotatedBox(
+              quarterTurns: corner,
+              child: Image.asset(
+                'assets/images/edgelayer.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }
 
 class _NavigationItem extends StatefulWidget {
