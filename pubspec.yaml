@@ -25,3 +25,22 @@ flutter:
   generate: true
   assets:
     - assets/images/edgelayer.png
+  fonts:
+    - family: Handlee
+      fonts:
+        - asset: assets/fonts/Handlee-Regular.ttf
+    - family: Kalam
+      fonts:
+        - asset: assets/fonts/Kalam-Light.ttf
+    - family: KimjungchulScript
+      fonts:
+        - asset: assets/fonts/KimjungchulScript-Regular.ttf
+    - family: KleeOne
+      fonts:
+        - asset: assets/fonts/KleeOne-Regular.ttf
+    - family: ShinDongYupHandwriting
+      fonts:
+        - asset: assets/fonts/ShinDongYupHandwriting-R.ttf
+    - family: YujiSyuku
+      fonts:
+        - asset: assets/fonts/YujiSyuku-Regular.ttf
