@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   intl: ^0.20.3
   url_launcher: ^6.3.2
+  flutter_spritesheet_animation: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +26,7 @@ flutter:
   generate: true
   assets:
     - assets/images/edgelayer.png
+    - assets/anime/lodinganime.png
   fonts:
     - family: Handlee
       fonts:
